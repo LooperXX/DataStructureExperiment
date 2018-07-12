@@ -16,7 +16,7 @@ import java.sql.*;
 
 @WebServlet(name = "ManageServlet")
 public class ManageServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws  IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("UTF-8");
         String type = request.getParameter("type");
@@ -27,23 +27,22 @@ public class ManageServlet extends HttpServlet {
             case "addS":
                 System.out.println("input" + input);
                 String[] op = input.split(";");
-                if(op.length != 3){
+                String[] add = op[0].split(",");
+                int num = Integer.parseInt(add[1]);
+                if(op.length != num + 1){
                     res = "no";
                     System.out.println("[Wrong]您的输入有误:<");
-                }else{
-                    String[] add = op[0].split(",");
-                    int num = Integer.parseInt(add[1]);
-                    System.out.println("num: " + num);
-                    Edge[] linkedEdge = new Edge[num];
-                    String[] linked = new String[num];
-                    for(int i = 1; i < 3; i++){
-                        String[] temp = op[i].split(",");
-                        linked[i-1] = temp[0];
-                        linkedEdge[i-1] = new Edge(Integer.parseInt(temp[1]));
-                    }
-                    Graph.addScenicSpot(add[0],linked,linkedEdge);
-                    System.out.println("[Success]" + type + ":>");
                 }
+                System.out.println("num: " + num);
+                Edge[] linkedEdge = new Edge[num];
+                String[] linked = new String[num];
+                for(int i = 0; i < num; i++){
+                    String[] temp = op[i+1].split(",");
+                    linked[i] = temp[0];
+                    linkedEdge[i] = new Edge(Integer.parseInt(temp[1]));
+                }
+                Graph.addScenicSpot(add[0],linked,linkedEdge);
+                System.out.println("[Success]" + type + ":>");
                 break;
             case "addE":
                 String[] op2 = input.split(",");
@@ -115,7 +114,7 @@ public class ManageServlet extends HttpServlet {
         out.close();
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws  IOException {
         doPost(request,response);
     }
 }
