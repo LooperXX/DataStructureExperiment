@@ -6,7 +6,6 @@ public class Node {
     public Node son;
     public Node brother;
     public String name;
-    public int value;
 
 
 
@@ -39,8 +38,7 @@ public class Node {
         }
     }
 
-    public Node(String name, int value) {
+    public Node(String name) {
         this.name = name;
-        this.value = value;
     }
 }

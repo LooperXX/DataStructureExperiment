@@ -79,7 +79,7 @@
                                 <a href="#" onclick="sortBy('受欢迎度','岔路数');">景点受欢迎度排序</a>
                             </li>
                             <li>
-                                <a href="#" onclick="sortBy('岔路数','受欢迎度');">景点受欢迎度排序</a>
+                                <a href="#" onclick="sortBy('岔路数','受欢迎度');">景点岔路数排序</a>
                             </li>
                         </ul>
                         <!-- /.nav-second-level -->
@@ -501,11 +501,11 @@
                 for(i = 0; i < edgesIndex.length; i++){
                     edges[edgesIndex[i]].lineStyle = newLineStyle;
                 }
-
                 option.series[0].data = points;
                 option.series[0].links = edges;
                 // 使用刚指定的配置项和数据显示图表。
                 myChart.setOption(option, true);
+                // 还原地图数据为初始地图备用
                 points = JSON.parse(JSON.stringify(prePoints));
                 edges = JSON.parse(JSON.stringify(preEdges));
                 console.log('option',option);

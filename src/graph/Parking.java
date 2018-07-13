@@ -58,6 +58,12 @@ public class Parking {
                 String time = getCurLeaveTime();
                 records.add(new ParkingRecord(type,input[1],time));
                 System.out.println("车牌号为" + input[1] + "的车辆已停离开停车场");
+                if(sideWay.size() != 0){
+                    String s = sideWay.get(0);
+                    sideWay.remove(s);
+                    park.push(s);
+                    System.out.println("车牌号为" + input[1] + "的车辆已停离开便道进入停车场" + park.size() + "号车道");
+                }
             }
         }
     }

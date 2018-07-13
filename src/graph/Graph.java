@@ -232,6 +232,7 @@ public class Graph {
             scene.get(linked[index]).getLinked().put(newNode,new Edge(edge.getDistance()));
             scene.get(newNode).getPath().put(linked[index],new Path(edge.getDistance(),newNode + "->" + linked[index]));
             scene.get(linked[index]).getPath().put(newNode, new Path(edge.getDistance(),linked[index] + "->" + newNode));
+            index++;
         }
 
         // 增加到其他节点的最短路径表中(并在新节点的最短路径表中加入其他节点）
@@ -288,6 +289,7 @@ public class Graph {
         // 还原edges并纠正scene的linked
         ArrayList<Path> rec = new ArrayList<>();
         SceneicSpot recoverNode = sceneRecover.get(node);
+        sceneRecover.remove(node);
         for(String s : recoverNode.getLinked().keySet()){
             if(sceneRecover.containsKey(s)){
                 recoverNode.getLinked().remove(s);
@@ -318,7 +320,6 @@ public class Graph {
         scene.put(node,recoverNode);
         initSPath();
         computeSPath();
-        sceneRecover.remove(node);
     }
 
     static void outGuideMap(String start) {
@@ -451,8 +452,10 @@ public class Graph {
         Path path;
         if(pathRecover.containsKey(edge[0])){
             path = pathRecover.get(edge[0]);
+            pathRecover.remove(edge[0]);
         }else{
             path = pathRecover.get(edge[1]);
+            pathRecover.remove(edge[1]);
         }
         scene.get(edge[0]).getLinked().put(edge[1],new Edge(path.getDis()));
         scene.get(edge[1]).getLinked().put(edge[0],new Edge(path.getDis()));
@@ -597,11 +600,11 @@ public class Graph {
 
     static void prim(int[][] graph, String[] guide) {
         int n = num_sceneicSpot;
-        Node root = new Node(guide[0],0);
+        Node root = new Node(guide[0]);
         Map<String, Node> tree = new HashMap<>();
         tree.put(guide[0],root);
         for(int i = 0; i < num_sceneicSpot - 1; i++){
-            tree.put(guide[i+1],new Node(guide[i+1],0));
+            tree.put(guide[i+1],new Node(guide[i+1]));
         }
         int[] cost = new int[n];
         int[] save = new int[n];//存取前驱结点
@@ -654,9 +657,9 @@ public class Graph {
         System.out.println("距离: " + SPathDis);
     }
 
-    private static void tspDFS(int u, int d, boolean[] visited, ArrayList<String> pathList) {
-        visited[u] = true;
-        if (u == d && pathList.size() == num_sceneicSpot)
+    private static void tspDFS(int cur, int end, boolean[] visited, ArrayList<String> pathList) {
+        visited[cur] = true;
+        if (cur == end && pathList.size() == num_sceneicSpot)
         {
             String path = pathList.toString();
             String[] road = path.substring(1,path.length()-1).replace(" ","").split(",");
@@ -674,15 +677,15 @@ public class Graph {
             }
 
         }
-        for (String s : scene.get(name.get(u)).getLinked().keySet())
+        for (String s : scene.get(name.get(cur)).getLinked().keySet())
         {
             if (!visited[name.indexOf(s)])
             {
                 pathList.add(name.get(name.indexOf(s)));
-                tspDFS(name.indexOf(s), d, visited, pathList);
+                tspDFS(name.indexOf(s), end, visited, pathList);
                 pathList.remove(s);
             }
         }
-        visited[u] = false;
+        visited[cur] = false;
     }
 }
